@@ -19,7 +19,7 @@ features = ["serde"]
 [dependencies.chrono]
 version = "*"
 features = ["serde"]
-serde = version = "1"
+serde = "1"
 
 
 futures = "^0.1.26"
