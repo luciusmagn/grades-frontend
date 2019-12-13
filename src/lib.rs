@@ -25,11 +25,22 @@ enum Routes {
 struct Model {
 	route: Routes,
 	index: index::Model,
+	grades: Vec<models::Grade>,
+	subjects: Vec<models::Subject>,
+	teachers: Vec<models::Teacher>,
+	student: models::Student,
 }
 
 impl Default for Model {
 	fn default() -> Self {
-		Self { route: Routes::Index, index: index::Model {}}
+		Self {
+			route: Routes::Index,
+			index: index::Model {},
+			grades: vec![],
+			subjects: vec![],
+			teachers: vec![],
+			student: models::Student::default(),
+		}
 	}
 }
 
@@ -107,7 +118,7 @@ fn view(model: &Model) -> impl View<Msg> {
 				match model.route {
 					Routes::Auth => auth::view(),
 					Routes::Index => index::view(),
-					Routes::Grades => grades::view(),
+					Routes::Grades => grades::view(model),
 					Routes::Subjects => subjects::view(model),
 					Routes::Teachers => teachers::view(model),
 				}

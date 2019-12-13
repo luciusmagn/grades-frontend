@@ -18,7 +18,7 @@ fn subjects(s: Vec<&str>) -> Node<crate::Msg> {
 	]
 }
 
-fn reacher(n: &str, i: &str, p: Vec<&str>) -> Node<crate::Msg> {
+fn teacher(n: &str, i: &str, p: Vec<&str>) -> Node<crate::Msg> {
 	section![
 		attrs!{At::Class => "card"},
 		style![

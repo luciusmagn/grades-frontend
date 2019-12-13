@@ -11,23 +11,19 @@ crate-type = ["cdylib"]
 [dependencies]
 seed = "^0.5.1"
 wasm-bindgen = "^0.2.50"
+serde = "1"
+futures = "^0.1.26"
 
 [dependencies.uuid]
 version = "*"
-features = ["serde"]
+features = ["serde", "v4", "wasm-bindgen"]
 
 [dependencies.chrono]
 version = "*"
 features = ["serde"]
-serde = "1"
-
-
-futures = "^0.1.26"
-
 
 [dev-dependencies]
 wasm-bindgen-test = "0.2.50" # NOTE: keep in sync with wasm-bindgen version
-
 
 [profile.release]  # Attempts to minimize file size
 lto = true
