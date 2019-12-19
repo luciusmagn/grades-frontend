@@ -34,6 +34,9 @@ fn footer(id: Uuid) -> Node<Msg> {
 }
 
 fn subject(id: Uuid, n: &str, u: &str, p: &str) -> Node<Msg> {
+	let store = seed::storage::get_storage().unwrap();
+	let typ: String = store.get_item("typ").unwrap().unwrap_or_default();
+
 	section![
 		attrs!{At::Class => "card"},
 		style![
@@ -41,7 +44,10 @@ fn subject(id: Uuid, n: &str, u: &str, p: &str) -> Node<Msg> {
 		],
 		nazev(n),
 		popis(u, p),
-		footer(id),
+		match typ.replace('"', "").as_str() {
+			"student" => footer(id),
+			_ => br![]
+		}
 	]
 }
 

@@ -5,7 +5,8 @@ use crate::{
 	models::{
 		GradeVal,
 		Grade,
-	}
+	},
+	console_log,
 };
 
 pub(crate) fn name(n: &str) -> Node<Msg> {
@@ -32,7 +33,7 @@ pub(crate) fn grades(g: Vec<Grade>) -> Node<Msg> {
 						td![x.date.format("%d.%m.%Y").to_string()],
 						td![match x.val {
 							GradeVal::Regular(f) => f.to_string(),
-							_ => unreachable!(),
+							_ => unreachable!("regular"),
 						}],
 						td![x.name]
 					]
@@ -58,7 +59,7 @@ pub(crate) fn bonus(g: Vec<Grade>) -> Node<Msg> {
 						td![x.date.format("%d.%m.%Y").to_string()],
 						td![match x.val {
 							GradeVal::Bonus(u) => u.to_string(),
-							_ => unreachable!(),
+							_ => unreachable!("bonus"),
 						}],
 					]
 				})
@@ -70,7 +71,7 @@ pub(crate) fn penalisation(g: Vec<Grade>) -> Node<Msg> {
 	table![
 		attrs!{At::Class => "striped"},
 		caption![
-			h4!["Bonus"]
+			h4!["Penalizace"]
 		],
 		thead![
 			th!["Datum"],
@@ -83,7 +84,7 @@ pub(crate) fn penalisation(g: Vec<Grade>) -> Node<Msg> {
 						td![x.date.format("%d.%m.%Y").to_string()],
 						td![match x.val {
 							GradeVal::Penalisation(u) => u.to_string(),
-							_ => unreachable!(),
+							_ => unreachable!("penalisation"),
 						}],
 					]
 				})
@@ -92,6 +93,7 @@ pub(crate) fn penalisation(g: Vec<Grade>) -> Node<Msg> {
 }
 
 pub(crate) fn subject(s: &crate::models::Subject, n: &str, formule: &str, g: Vec<Grade>, b: Vec<Grade>, p: Vec<Grade>) -> Node<Msg> {
+	console_log!("{:?} {:?} {:?}", g, b, p);
 	section![
 		attrs!{At::Class => "card"},
 		name(n),
@@ -174,13 +176,11 @@ pub(crate) fn view(model: &Model) -> Vec<Node<Msg>> {
 	let grades = model
 		.grades
 		.iter()
-		.filter(|x| model
-			.student
-			.subjects
-			.contains(&x.subject))
+		.inspect(|x| console_log!("first {:?}", x))
 		.filter(|x| model
 			.student
 			.id == x.student)
+		.inspect(|x| console_log!("second {:?}", x))
 		.cloned()
 		.collect::<Vec<Grade>>();
 

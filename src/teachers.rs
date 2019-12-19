@@ -2,9 +2,13 @@ use crate::{Model, Msg};
 use seed::{prelude::*, *};
 
 
-fn name(n: &str) -> Node<Msg> {
+fn name(n: &str, em: &str) -> Node<Msg> {
 	header![
-		h4![n]
+		h4![n],
+		a![
+			attrs!{At::Href => format!("mailto:{}", em)},
+			em
+		],
 	]
 }
 
@@ -19,14 +23,15 @@ fn subjects(s: Vec<String>) -> Node<Msg> {
 	]
 }
 
-fn teacher(n: &str, i: &str, p: Vec<String>) -> Node<Msg> {
+fn teacher(n: &str, em: &str, i: &str, p: Vec<String>) -> Node<Msg> {
 	section![
 		attrs!{At::Class => "card"},
 		style![
 			St::MarginTop => "1em",
 		],
-		name(n),
+		name(n, em),
 		info(i),
+		h5!["Předměty"],
 		subjects(p),
 	]
 }
@@ -41,13 +46,31 @@ pub(crate) fn view(model: &Model) -> Vec<Node<Msg>> {
 				model.teachers
 					.iter()
 					.enumerate()
+					.filter(|(i, _)| i % 3 == 0)
+					.map(|(_, x)| x)
+					.map(|x| teacher(
+						&x.name,
+						&x.email,
+						&x.info,
+						model.subjects.iter()
+							.filter(|p| p.teacher == x.id)
+							.map(|p| p.name.clone())
+							.collect::<Vec<_>>()
+					))
+			],
+			section![
+				attrs!{At::Class => "col"},
+				model.teachers
+					.iter()
+					.enumerate()
 					.filter(|(i, _)| i % 3 == 1)
 					.map(|(_, x)| x)
 					.map(|x| teacher(
 						&x.name,
+						&x.email,
 						&x.info,
 						model.subjects.iter()
-							.filter(|p| x.subjects.contains(&p.id))
+							.filter(|p| p.teacher == x.id)
 							.map(|p| p.name.clone())
 							.collect::<Vec<_>>()
 					))
@@ -61,25 +84,10 @@ pub(crate) fn view(model: &Model) -> Vec<Node<Msg>> {
 					.map(|(_, x)| x)
 					.map(|x| teacher(
 						&x.name,
+						&x.email,
 						&x.info,
 						model.subjects.iter()
-							.filter(|p| x.subjects.contains(&p.id))
-							.map(|p| p.name.clone())
-							.collect::<Vec<_>>()
-					))
-			],
-			section![
-				attrs!{At::Class => "col"},
-				model.teachers
-					.iter()
-					.enumerate()
-					.filter(|(i, _)| i % 3 == 0)
-					.map(|(_, x)| x)
-					.map(|x| teacher(
-						&x.name,
-						&x.info,
-						model.subjects.iter()
-							.filter(|p| x.subjects.contains(&p.id))
+							.filter(|p| p.teacher == x.id)
 							.map(|p| p.name.clone())
 							.collect::<Vec<_>>()
 					))

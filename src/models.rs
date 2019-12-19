@@ -48,6 +48,23 @@ pub enum Kind {
 	Humanity,
 }
 
+impl Default for Kind {
+	fn default() -> Kind {
+		Kind::Science
+	}
+}
+
+impl Kind {
+	pub(crate) fn new(s: &str) -> Kind {
+		match s {
+			"Science" => Kind::Science,
+			"Humanity" => Kind::Humanity,
+			"Other" => Kind::Other,
+			_ => unreachable!("kind"),
+		}
+	}
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Subject {
 	pub id: Uuid,
@@ -66,6 +83,18 @@ pub struct Teacher {
 	pub email: String,
 	pub info: String,
 	pub subjects: Vec<Uuid>,
+}
+
+impl Default for Teacher {
+	fn default() -> Self {
+		Self {
+			id: Uuid::new_v4(),
+			name: String::new(),
+			email: String::new(),
+			info: String::new(),
+			subjects: vec![],
+		}
+	}
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

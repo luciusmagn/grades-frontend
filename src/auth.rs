@@ -26,7 +26,7 @@ pub(crate) fn view() -> Vec<Node<crate::Msg>> {
 						label!["Heslo"],
 						input![
 							attrs!{
-								At::Type => "pass",
+								At::Type => "password",
 								At::Placeholder => "1234"
 							},
 							input_ev(Ev::Input, Msg::TeacherLoginPass),
