@@ -54,9 +54,35 @@ pub(crate) fn view(model: &Model) -> Vec<Node<Msg>> {
 			],
 			section![
 				attrs!{At::Class => "col"},
+				model.teachers
+					.iter()
+					.enumerate()
+					.filter(|(i, _)| i % 3 == 2)
+					.map(|(_, x)| x)
+					.map(|x| teacher(
+						&x.name,
+						&x.info,
+						model.subjects.iter()
+							.filter(|p| x.subjects.contains(&p.id))
+							.map(|p| p.name.clone())
+							.collect::<Vec<_>>()
+					))
 			],
 			section![
 				attrs!{At::Class => "col"},
+				model.teachers
+					.iter()
+					.enumerate()
+					.filter(|(i, _)| i % 3 == 0)
+					.map(|(_, x)| x)
+					.map(|x| teacher(
+						&x.name,
+						&x.info,
+						model.subjects.iter()
+							.filter(|p| x.subjects.contains(&p.id))
+							.map(|p| p.name.clone())
+							.collect::<Vec<_>>()
+					))
 			],
 		]
 	]
