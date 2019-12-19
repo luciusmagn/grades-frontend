@@ -1,12 +1,19 @@
+use uuid::Uuid;
 use seed::{prelude::*, *};
 
-fn nazev(n: &str) -> Node<crate::Msg> {
+use crate::{
+	Msg,
+	Model,
+	models::Kind,
+};
+
+fn nazev(n: &str) -> Node<Msg> {
 	header![
 		h4![n]
 	]
 }
 
-fn popis(u: &str, p: &str) -> Vec<Node<crate::Msg>> {
+fn popis(u: &str, p: &str) -> Vec<Node<Msg>> {
 	vec![
 		p![
 			b!["Vyučující: "],
@@ -16,16 +23,17 @@ fn popis(u: &str, p: &str) -> Vec<Node<crate::Msg>> {
 	]
 }
 
-fn footer() -> Node<crate::Msg> {
+fn footer(id: Uuid) -> Node<Msg> {
 	footer![
 		a![
 			attrs!{At::Class => "button dark"},
+			simple_ev(Ev::Click, Msg::SignUp(id)),
 			"Zapsat se"
 		]
 	]
 }
 
-fn subject(n: &str, u: &str, p: &str) -> Node<crate::Msg> {
+fn subject(id: Uuid, n: &str, u: &str, p: &str) -> Node<Msg> {
 	section![
 		attrs!{At::Class => "card"},
 		style![
@@ -33,11 +41,11 @@ fn subject(n: &str, u: &str, p: &str) -> Node<crate::Msg> {
 		],
 		nazev(n),
 		popis(u, p),
-		footer(),
+		footer(id),
 	]
 }
 
-pub(crate) fn view(model: &crate::Model) -> Vec<Node<crate::Msg>> {
+pub(crate) fn view(model: &Model) -> Vec<Node<Msg>> {
 	vec![
 		h2!["Předměty"],
 		section![
@@ -45,14 +53,29 @@ pub(crate) fn view(model: &crate::Model) -> Vec<Node<crate::Msg>> {
 			section![
 				attrs!{At::Class => "col"},
 				h3!["Přírodovědné"],
+				model.subjects
+					.iter()
+					.filter(|x| x.kind == Kind::Science)
+					.map(|x| subject(x.id, &x.name, &model.teachers.iter().find(|u| x.teacher == u.id).unwrap().name, &x.description))
+					.collect::<Vec<_>>()
 			],
 			section![
 				attrs!{At::Class => "col"},
 				h3!["Humanitní"],
+				model.subjects
+					.iter()
+					.filter(|x| x.kind == Kind::Humanity)
+					.map(|x| subject(x.id, &x.name, &model.teachers.iter().find(|u| x.teacher == u.id).unwrap().name, &x.description))
+					.collect::<Vec<_>>()
 			],
 			section![
 				attrs!{At::Class => "col"},
 				h3!["Ostatní"],
+				model.subjects
+					.iter()
+					.filter(|x| x.kind == Kind::Other)
+					.map(|x| subject(x.id, &x.name, &model.teachers.iter().find(|u| x.teacher == u.id).unwrap().name, &x.description))
+					.collect::<Vec<_>>()
 			],
 		]
 	]

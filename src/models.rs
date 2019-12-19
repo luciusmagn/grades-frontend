@@ -41,6 +41,13 @@ impl Grade {
 	}
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+pub enum Kind {
+	Other,
+	Science,
+	Humanity,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Subject {
 	pub id: Uuid,
@@ -48,6 +55,8 @@ pub struct Subject {
 	pub description: String,
 	pub year: String,
 	pub grade_formula: String,
+	pub kind: Kind,
+	pub teacher: Uuid,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -55,6 +64,7 @@ pub struct Teacher {
 	pub id: Uuid,
 	pub name: String,
 	pub email: String,
+	pub info: String,
 	pub subjects: Vec<Uuid>,
 }
 

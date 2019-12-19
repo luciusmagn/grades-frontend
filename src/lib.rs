@@ -1,9 +1,10 @@
+use uuid::Uuid;
 use seed::{prelude::*, *};
 
-#[macro_use]
 extern crate serde;
 extern crate chrono;
 extern crate uuid;
+extern crate rsc;
 
 mod auth;
 mod index;
@@ -24,7 +25,6 @@ enum Routes {
 
 struct Model {
 	route: Routes,
-	index: index::Model,
 	grades: Vec<models::Grade>,
 	subjects: Vec<models::Subject>,
 	teachers: Vec<models::Teacher>,
@@ -35,7 +35,6 @@ impl Default for Model {
 	fn default() -> Self {
 		Self {
 			route: Routes::Index,
-			index: index::Model {},
 			grades: vec![],
 			subjects: vec![],
 			teachers: vec![],
@@ -48,11 +47,13 @@ impl Default for Model {
 #[derive(Clone)]
 enum Msg {
 	Route(Routes),
+	SignUp(Uuid),
 }
 
 fn update(msg: Msg, model: &mut Model, _: &mut impl Orders<Msg>) {
 	match msg {
 		Msg::Route(r) => model.route = r,
+		Msg::SignUp(id) => (),
 	}
 }
 
